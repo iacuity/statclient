@@ -99,11 +99,13 @@ func sendStat() {
 				sMap[pair.Key] = val + pair.Value
 			}
 		case <-ticker.C:
-			// send stats to stat service
-			if err := flushStat(sMap); nil != err {
-				llog.Error("Flush error:%s", err.Error())
-			} else {
-				sMap = make(map[string]int64)
+			if len(sMap) > 0 {
+				// send stats to stat service
+				if err := flushStat(sMap); nil != err {
+					llog.Error("Flush error:%s", err.Error())
+				} else {
+					sMap = make(map[string]int64)
+				}
 			}
 		}
 	}
